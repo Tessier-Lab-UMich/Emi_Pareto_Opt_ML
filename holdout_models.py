@@ -7,13 +7,13 @@ Created on Sun Sep 12 13:13:21 2021
 
 from holdout_utils import *
 
-emi_binding = pd.read_csv("C:\\Users\\makow\\Documents\\GitHub\\Emi_Pareto_opt_ML\\emi_binding.csv", header = 0, index_col = 0)
-iso_binding = pd.read_csv("C:\\Users\\makow\\Documents\\GitHub\\Emi_Pareto_opt_ML\\iso_binding.csv", header = 0, index_col = 0)
-igg_binding = pd.read_csv("C:\\Users\\makow\\Documents\\GitHub\\Emi_Pareto_opt_ML\\igg_binding.csv", header = 0, index_col = 0)
+emi_binding = pd.read_csv("emi_binding.csv", header = 0, index_col = 0)
+iso_binding = pd.read_csv("iso_binding.csv", header = 0, index_col = 0)
+igg_binding = pd.read_csv("igg_binding.csv", header = 0, index_col = 0)
 
-emi_reps = pd.read_csv("C:\\Users\\makow\\Documents\\GitHub\\Emi_Pareto_opt_ML\\emi_reps.csv", header = 0, index_col = 0)
-iso_reps = pd.read_csv("C:\\Users\\makow\\Documents\\GitHub\\Emi_Pareto_opt_ML\\iso_reps.csv", header = 0, index_col = 0)
-igg_reps = pd.read_csv("C:\\Users\\makow\\Documents\\GitHub\\Emi_Pareto_opt_ML\\igg_reps.csv", header = 0, index_col = 0)
+emi_reps = pd.read_csv("emi_reps.csv", header = 0, index_col = 0)
+iso_reps = pd.read_csv("iso_reps.csv", header = 0, index_col = 0)
+igg_reps = pd.read_csv("igg_reps.csv", header = 0, index_col = 0)
 
 
 iso_ho = ho_seq_ind(iso_binding.index)

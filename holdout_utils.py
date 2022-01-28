@@ -99,7 +99,7 @@ def ho_ohe(seq_ind):
     return ohe
 
 
-residue_info = pd.read_csv("C:\\Users\\makow\\Documents\\GitHub\\UniRep\\Datasets\\residue_dict.csv", header = 0, index_col = 0)
+residue_info = pd.read_csv("residue_dict.csv", header = 0, index_col = 0)
 def ho_physchemmut(seq_ind):
     holdout_biophys = []
     for k in np.arange(len(res_ind)):

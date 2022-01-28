@@ -8,13 +8,13 @@ Created on Sun Sep 12 13:13:21 2021
 from holdout_utils import *
 from physchem_gen import physchemvh_gen
 
-emi_binding = pd.read_csv("C:\\Users\\makow\\Documents\\GitHub\\Emi_Pareto_opt_ML\\emi_binding.csv", header = 0, index_col = 0)
-iso_binding = pd.read_csv("C:\\Users\\makow\\Documents\\GitHub\\Emi_Pareto_opt_ML\\iso_binding.csv", header = 0, index_col = 0)
-igg_binding = pd.read_csv("C:\\Users\\makow\\Documents\\GitHub\\Emi_Pareto_opt_ML\\igg_binding.csv", header = 0, index_col = 0)
+emi_binding = pd.read_csv("emi_binding.csv", header = 0, index_col = 0)
+iso_binding = pd.read_csv("iso_binding.csv", header = 0, index_col = 0)
+igg_binding = pd.read_csv("igg_binding.csv", header = 0, index_col = 0)
 
-emi_pI = pd.read_csv("C:\\Users\\makow\\Documents\\GitHub\\Emi_Pareto_opt_ML\\emi_pI.txt", sep = '\t', header = None, index_col = None)
-iso_pI = pd.read_csv("C:\\Users\\makow\\Documents\\GitHub\\Emi_Pareto_opt_ML\\iso_pI.txt", sep = '\t',header = None, index_col = None)
-igg_pI = pd.read_csv("C:\\Users\\makow\\Documents\\GitHub\\Emi_Pareto_opt_ML\\igg_pI.txt", sep = '\t',header = None, index_col = None)
+emi_pI = pd.read_csv("emi_pI.txt", sep = '\t', header = None, index_col = None)
+iso_pI = pd.read_csv("iso_pI.txt", sep = '\t',header = None, index_col = None)
+igg_pI = pd.read_csv("igg_pI.txt", sep = '\t',header = None, index_col = None)
 
 #%%
 emi_physvh = physchemvh_gen(emi_binding, emi_pI.iloc[:,1])
@@ -24,23 +24,68 @@ igg_physvh = physchemvh_gen(igg_binding, igg_pI.iloc[:,1])
 #%%
 lda_ant = LDA()
 cv_results = cv(lda_ant, emi_physvh, emi_binding.iloc[:,0])
+print('Antigen model cross validation average test accuracy: ' + str(np.mean(cv_results['test_score'])))
 emi_ant_transform = pd.DataFrame(lda_ant.fit_transform(emi_physvh, emi_binding.iloc[:,0])).set_index(emi_binding.index)
 emi_ant_predict = pd.DataFrame(lda_ant.predict(emi_physvh)).set_index(emi_binding.index)
-print(accuracy_score(emi_ant_predict.iloc[:,0], emi_binding.iloc[:,0]))
+print('Antigen model accuracy: ' + str(accuracy_score(emi_ant_predict.iloc[:,0], emi_binding.iloc[:,0])))
 iso_ant_transform = pd.DataFrame(lda_ant.transform(iso_physvh)).set_index(iso_binding.index)
 iso_ant_predict = pd.DataFrame(lda_ant.predict(iso_physvh)).set_index(iso_binding.index)
 igg_ant_transform = pd.DataFrame(lda_ant.transform(igg_physvh)).set_index(igg_binding.index)
 
 lda_psy = LDA()
 cv_results = cv(lda_psy, emi_physvh, emi_binding.iloc[:,1])
+print('Specificity model cross validation average test accuracy: ' + str(np.mean(cv_results['test_score'])))
 emi_psy_transform = pd.DataFrame(-1*lda_psy.fit_transform(emi_physvh, emi_binding.iloc[:,1])).set_index(emi_binding.index)
 emi_psy_predict = pd.DataFrame(lda_psy.predict(emi_physvh)).set_index(emi_binding.index)
-print(accuracy_score(emi_psy_predict.iloc[:,0], emi_binding.iloc[:,1]))
+print('Specificity model accuracy: ' + str(accuracy_score(emi_psy_predict.iloc[:,0], emi_binding.iloc[:,1])))
 iso_psy_transform = pd.DataFrame(-1*lda_psy.transform(iso_physvh)).set_index(iso_binding.index)
 iso_psy_predict = pd.DataFrame(lda_psy.predict(iso_physvh)).set_index(iso_binding.index)
 igg_psy_transform = pd.DataFrame(-1*lda_psy.transform(igg_physvh)).set_index(igg_binding.index)
 
+
 #%%
+# sample size elbow plot
+emi_data = pd.concat([emi_binding, emi_physvh.set_index(emi_binding.index)], axis = 1)
+ant_test_acc = []
+psy_test_acc = []
+for i in np.arange(25,4000,25):
+    emi_data_subset = emi_data.sample(i)
+    emi_data_subset_train, emi_data_subset_test, emi_data_subset_target_train, emi_data_subset_target_test = train_test_split(emi_data_subset.iloc[:,3:8000], emi_data_subset.iloc[:,0:3])
+    cv_results = cv(lda_ant, emi_data_subset.iloc[:,3:8000], emi_data_subset.iloc[:,1])
+    ant_test_acc.append(np.mean(cv_results['test_score']))
+    cv_results = cv(lda_psy, emi_data_subset.iloc[:,3:8000], emi_data_subset.iloc[:,0])
+    psy_test_acc.append(np.mean(cv_results['test_score']))
+    
+    #%%
+plt.scatter(np.arange(25,4000,25), ant_test_acc, c = 'blue', edgecolor = 'k', linewidth = 0.25, s = 50)
+plt.scatter(np.arange(25,4000,25), psy_test_acc, c = 'red', edgecolor = 'k', linewidth = 0.25, s = 50)
+plt.xticks([0,1000,2000,3000,4000], fontsize = 24)
+plt.yticks([0.5, 0.6, 0.7,0.8, 0.9, 1.0], [50, 60, 70, 80, 90, 100], fontsize = 24)
+
+#%%
+#KNN of sequences
+from sklearn.neighbors import KNeighborsClassifier as KNC
+
+ant_predict_acc = []
+psy_predict_acc = []
+for j in np.arange(1,25):
+    knc = KNC(n_neighbors = j)
+    emi_onehot_train, emi_onehot_test, emi_binding_train, emi_binding_test = train_test_split(emi_physvh, emi_binding)
+    knc.fit(emi_onehot_train, emi_binding_train.iloc[:,0])
+    ant_predict = knc.predict(emi_onehot_test)
+    ant_predict_acc.append(accuracy_score(ant_predict, emi_binding_test.iloc[:,0]))
+    knc.fit(emi_onehot_train, emi_binding_train.iloc[:,1])
+    psy_predict = knc.predict(emi_onehot_test)
+    psy_predict_acc.append(accuracy_score(psy_predict, emi_binding_test.iloc[:,1]))
+
+#%%
+plt.scatter(np.arange(1,25), ant_predict_acc, c = 'blue', edgecolor = 'k', linewidth = 0.25, s = 50)
+plt.scatter(np.arange(1,25), psy_predict_acc, c = 'red', edgecolor = 'k', linewidth = 0.25, s = 50)
+plt.xticks(fontsize = 24)
+plt.yticks([0.8, 0.9, 1.0], [80, 90, 100], fontsize = 24)
+
+#%%
+#model accuracy distributions
 plt.figure()
 sns.distplot(emi_ant_transform.loc[emi_binding['ANT Binding'] == 0, 0], color = 'red')
 sns.distplot(emi_ant_transform.loc[emi_binding['ANT Binding'] == 1, 0], color = 'blue')
@@ -56,13 +101,15 @@ plt.xticks([-4, -2, 0, 2, 4], [-4, -2, 0, 2, 4], fontsize = 26)
 plt.yticks([0.0, 0.2, 0.4, 0.6], [0.0, 0.2, 0.4, 0.6], fontsize = 26)
 plt.ylabel('')
 
+#%%
+#yeast data correlations
 plt.figure()
 plt.scatter(iso_ant_transform.iloc[:,0], iso_binding.iloc[:,1], c = iso_ant_predict.iloc[:,0], cmap = cmap9r, s = 150, edgecolor = 'k', linewidth = 0.25)
 plt.scatter(iso_ant_transform.iloc[125,0], iso_binding.iloc[125,1], c = 'k', s = 250, edgecolor = 'k', linewidth = 0.25)
 plt.xticks([-4, -2, 0, 2, 4], [-4, -2, 0, 2, 4], fontsize = 26)
 plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
 plt.ylim(-0.15, 1.85)
-print(sc.stats.spearmanr(iso_ant_transform.iloc[:,0], iso_binding.iloc[:,1]))
+print('Antigen model scFab correlation: ' + str(sc.stats.spearmanr(iso_ant_transform.iloc[:,0], iso_binding.iloc[:,1])))
 
 plt.figure()
 plt.scatter(iso_psy_transform.iloc[:,0], iso_binding.iloc[:,2], c = iso_psy_predict.iloc[:,0], cmap = cmap9r, s = 150, edgecolor = 'k', linewidth = 0.25)
@@ -70,8 +117,10 @@ plt.scatter(iso_psy_transform.iloc[125,0], iso_binding.iloc[125,2], c = 'k', s =
 plt.xticks([-4, -2, 0, 2, 4], [-4, -2, 0, 2, 4], fontsize = 26)
 plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
 plt.ylim(-0.15, 1.85)
-print(sc.stats.spearmanr(iso_psy_transform.iloc[:,0], iso_binding.iloc[:,2]))
+print('Specificity model scFab correlation: ' + str(sc.stats.spearmanr(iso_psy_transform.iloc[:,0], iso_binding.iloc[:,2])))
 
+#%%
+#pareto plots
 plt.figure()
 plt.scatter(emi_ant_transform, emi_psy_transform, color = 'white', edgecolor = 'k', s = 40, linewidth = 0.25)
 plt.scatter(igg_ant_transform.iloc[0:41,0], igg_psy_transform.iloc[0:41,0], color = cmap(0.15), edgecolor= 'k', s = 80, linewidth = 0.25)
@@ -89,6 +138,8 @@ plt.xticks([-6, -4, -2, 0, 2, 4, 6], [-6, -4, -2, 0, 2, 4, 6], fontsize = 26)
 plt.yticks([-6, -4, -2, 0, 2, 4, 6], [-6, -4, -2, 0, 2, 4, 6], fontsize = 26)
 plt.ylabel('')
 
+#%%
+#in-library IgG correlations
 plt.figure()
 plt.errorbar(igg_ant_transform.iloc[0:41,0], igg_binding.iloc[0:41,1], yerr = igg_binding.iloc[0:41,3], linewidth = 0, elinewidth = 0.5, ecolor = 'k', capsize = 3, zorder = 1)
 plt.scatter(igg_ant_transform.iloc[0:41,0], igg_binding.iloc[0:41,1], c = cmap(0.15), s = 150, edgecolor = 'k', linewidth = 0.25, zorder = 2)
@@ -96,7 +147,7 @@ plt.scatter(igg_ant_transform.iloc[41:42,0], 1, color = 'k', s = 250, edgecolor=
 plt.xticks([1, 2, 3], [1, 2, 3], fontsize = 26)
 plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
 plt.ylim(-0.05, 1.65)
-print(sc.stats.spearmanr(igg_ant_transform.iloc[0:42,0], igg_binding.iloc[0:42,1]))
+print('Antigen model in-library IgG correlation: ' + str(sc.stats.spearmanr(igg_ant_transform.iloc[0:42,0], igg_binding.iloc[0:42,1])))
 
 plt.figure()
 plt.errorbar(igg_psy_transform.iloc[0:41,0], igg_binding.iloc[0:41,2], yerr = igg_binding.iloc[0:41,4], linewidth = 0, elinewidth = 0.5, ecolor = 'k', capsize = 3, zorder = 1)
@@ -105,8 +156,10 @@ plt.scatter(igg_psy_transform.iloc[41:42,0], 1, color = 'k', s = 250, edgecolor=
 plt.xticks([0,1, 2, 3], [0,1, 2, 3], fontsize = 26)
 plt.yticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
 plt.ylim(-0.15, 1.45)
-print(sc.stats.spearmanr(igg_psy_transform.iloc[0:42,0], igg_binding.iloc[0:42,2]))
+print('Specificity model in-library IgG correlation: ' + str(sc.stats.spearmanr(igg_psy_transform.iloc[0:42,0], igg_binding.iloc[0:42,2])))
 
+#%%
+#experimental pareto
 plt.figure()
 plt.errorbar(igg_binding.iloc[0:41,1], igg_binding.iloc[0:41,2], xerr = igg_binding.iloc[0:41,3], yerr = igg_binding.iloc[0:41,4], linewidth = 0, elinewidth = 0.5, ecolor = 'k', capsize = 3, zorder = 1)
 plt.scatter(igg_binding.iloc[0:41,1], igg_binding.iloc[0:41,2], s = 150, c = cmap(0.15), edgecolor = 'k', linewidth = 0.5, zorder = 2)
@@ -118,24 +171,8 @@ plt.xlim(-0.05, 1.45)
 plt.yticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
 plt.ylim(-0.15, 1.35)
 
-plt.figure()
-plt.errorbar(igg_ant_transform.iloc[42:103,0], igg_binding.iloc[42:103,1], yerr = igg_binding.iloc[42:103,3], linewidth = 0, elinewidth = 0.25, ecolor = 'k', capsize = 3, zorder = 1)
-plt.scatter(igg_ant_transform.iloc[42:103,0], igg_binding.iloc[42:103,1], c = cmap(0.15), s = 150, edgecolor = 'k', linewidth = 0.25, zorder = 2)
-plt.scatter(igg_ant_transform.iloc[8,0], igg_binding.iloc[8,1], c = 'orange', s = 250, edgecolor = 'k', linewidth = 0.25, zorder = 3)
-plt.scatter(igg_ant_transform.iloc[41:42,0], 1, color = 'k', s = 250, edgecolor= 'k', linewidth = 0.25, zorder = 3)
-plt.xticks([1, 2, 3,4], [1, 2, 3,4], fontsize = 26)
-plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
-plt.ylim(-0.05, 1.8)
-
-plt.figure()
-plt.errorbar(igg_psy_transform.iloc[42:103,0], igg_binding.iloc[42:103,2], yerr = igg_binding.iloc[42:103,4], linewidth = 0, elinewidth = 0.25, ecolor = 'k', capsize = 3, zorder = 1)
-plt.scatter(igg_psy_transform.iloc[42:103,0], igg_binding.iloc[42:103,2], c = cmap(0.85), s = 150, edgecolor = 'k', linewidth = 0.25, zorder = 2)
-plt.scatter(igg_psy_transform.iloc[8,0], igg_binding.iloc[8,2], c = 'orange', s = 250, edgecolor = 'k', linewidth = 0.25, zorder = 3)
-plt.scatter(igg_psy_transform.iloc[41:42,0], 1, color = 'k', s = 250, edgecolor= 'k', linewidth = 0.25, zorder = 3)
-plt.xticks([0,1, 2, 3], [0,1, 2, 3], fontsize = 26)
-plt.yticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
-plt.ylim(-0.15, 1.45)
-
+#%%
+#novel IgG correlations
 plt.figure()
 plt.errorbar(igg_ant_transform.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT Binding'], yerr = igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT STDEV'], linewidth = 0, elinewidth = 0.25, ecolor = 'k', capsize = 3, zorder = 1)
 plt.scatter(igg_ant_transform.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT Binding'], c = cmap(0.15), s = 150, edgecolor = 'k', linewidth = 0.25, zorder = 2)
@@ -144,7 +181,7 @@ plt.scatter(igg_ant_transform.iloc[41:42,0], 1, color = 'k', s = 250, edgecolor=
 plt.xticks([0,1, 2, 3,4], [0,1, 2, 3,4], fontsize = 26)
 plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
 plt.ylim(-0.05, 1.8)
-print(sc.stats.spearmanr(igg_ant_transform.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT Binding']))
+print('Antigen model novel IgG correlation: ' + str(sc.stats.spearmanr(igg_ant_transform.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT Binding'])))
 
 plt.figure()
 plt.errorbar(igg_psy_transform.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA Binding'], yerr = igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA STDEV'], linewidth = 0, elinewidth = 0.25, ecolor = 'k', capsize = 3, zorder = 1)
@@ -154,6 +191,6 @@ plt.scatter(igg_psy_transform.iloc[41:42,0], 1, color = 'k', s = 250, edgecolor=
 plt.xticks([0,1, 2, 3,4,5], [0,1, 2, 3,4,5], fontsize = 26)
 plt.yticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
 plt.ylim(-0.15, 1.45)
-print(sc.stats.spearmanr(igg_psy_transform.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA Binding']))
+print('Specificity model novel IgG correlation: ' + str(sc.stats.spearmanr(igg_psy_transform.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA Binding'])))
 
 

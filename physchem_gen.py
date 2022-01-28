@@ -8,7 +8,7 @@ Created on Mon Sep 13 12:19:35 2021
 import numpy as np
 import pandas as pd
 
-residue_info = pd.read_csv("C:\\Users\\makow\\Documents\\GitHub\\UniRep\\Datasets\\residue_dict.csv", header = 0, index_col = 0)
+residue_info = pd.read_csv("residue_dict.csv", header = 0, index_col = 0)
 res_ind = [32, 49, 54, 55, 56, 98, 100, 103]
 res_aa = ['Y','R','R','R','G','A','W','Y']
 alph = np.array(sorted('ACDEFGHIKLMNPQRSTVWY'))

@@ -33,26 +33,27 @@ def split(word):
     return [char for char in word]
 
 res_ind = [32, 49, 54, 55, 56, 98, 100, 103]
-res_aa = ['Y','R','R','R','G','A','W','Y']
+res_wt = ['Y','R','R','R','G','A','W','Y']
+res_top = ['V', 'E', 'G', 'G', 'D', 'S', 'L', 'D']
 
-def ho_seq_ind(seqs):
+def ho_seq_ind(seqs, res):
     holdout_seqs = []
     for i in np.arange(len(res_ind)):
         holdout = []
         for j in seqs:
             chars = list(j)
-            if chars[res_ind[i]] == res_aa[i]:
+            if chars[res_ind[i]] == res[i]:
                 holdout.append(''.join(str(ii) for ii in chars))
         holdout_seqs.append(pd.DataFrame(holdout))
     return holdout_seqs
 
-def ho_seq_ind_inverse(seqs):
+def ho_seq_ind_inverse(seqs, res):
     holdout_seqs = []
     for i in np.arange(len(res_ind)):
         holdout = []
         for j in seqs:
             chars = list(j)
-            if chars[res_ind[i]] != res_aa[i]:
+            if chars[res_ind[i]] != res[i]:
                 holdout.append(''.join(str(ii) for ii in chars))
         holdout_seqs.append(pd.DataFrame(holdout))
     return holdout_seqs

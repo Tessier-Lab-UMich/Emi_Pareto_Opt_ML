@@ -14,6 +14,17 @@ from matplotlib.patches import Rectangle
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+from matplotlib.colors import ListedColormap, LinearSegmentedColormap
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import LabelEncoder
+
+cmap = plt.cm.get_cmap('bwr')
+colormap9= np.array([cmap(0.15),cmap(0.85)])
+cmap9 = LinearSegmentedColormap.from_list("mycmap", colormap9)
+
+colormap9r= np.array([cmap(0.85),cmap(0.15)])
+cmap9r = LinearSegmentedColormap.from_list("mycmap", colormap9r)
+
 
 #%% Load data into dataframes
 emi_binding = pd.read_csv("emi_binding.csv", header = 0, index_col = 0)
@@ -90,7 +101,7 @@ class projectorDecider(Model):
         self.inputDim = inputDim
         self.projector = tf.keras.Sequential([
             tf.keras.layers.InputLayer(input_shape = (self.inputDim)),
-            # tf.keras.layers.Dense(100),
+            tf.keras.layers.Dense(128),
             tf.keras.layers.Dense(self.projDim)])
         self.decider = tf.keras.Sequential([
             tf.keras.layers.InputLayer(input_shape = (self.projDim,)),
@@ -99,7 +110,7 @@ class projectorDecider(Model):
         projected = self.projector(x)
         decided = self.decider(projected)
         return decided
-
+"""
 
 f = KFold(n_splits = 10, shuffle = True)
 fn = 1
@@ -128,6 +139,8 @@ for train, test in kf.split(features, targets):
     acc_per_fold.append(scores[1] * 100)
     loss_per_fold.append(scores[0])
     fn += 1
+"""
+
 #%% Train "final" models
 
 pdModelAnt = projectorDecider(1, 2300)
@@ -147,21 +160,49 @@ pdModelPsy.fit(features, targetsPsy,
                         epochs = nepochs,
                         verbose = 1)
 
-#%% Project isolated OHE features and compare w/ data
-projIsoAnt = pdModelAnt.projector(iso_onehot.values)
+#%%
+proj_emi_ant = pd.DataFrame(pdModelAnt.projector(emi_onehot.values)).set_index(emi_binding.index)
+proj_emi_psy = pd.DataFrame(pdModelPsy.projector(emi_onehot.values)).set_index(emi_binding.index)
+
+#%%
 plt.figure()
-plt.scatter(projIsoAnt, iso_binding['ANT Binding'].values)
-plt.xlabel('NN Projection')
-plt.ylabel('Measured ANT binding')
-antCorr = sc.stats.spearmanr(projIsoAnt, iso_binding['ANT Binding'].values)
+sns.distplot(-1*proj_emi_ant.loc[emi_binding['ANT Binding'] == 0, 0], color = 'red')
+sns.distplot(-1*proj_emi_ant.loc[emi_binding['ANT Binding'] == 1, 0], color = 'blue')
+plt.xticks([-30, -20, -10, 0, 10], [-30, -20, -10, 0, 10], fontsize = 26)
+plt.yticks([0.0, 0.04, 0.08, 0.12, 0.16], [0.0, 0.04, 0.08, 0.12, 0.16], fontsize = 26)
+plt.ylabel('')
+
+plt.figure()
+sns.distplot(-1*proj_emi_psy.loc[emi_binding['OVA Binding'] == 0, 0], color = 'blue')
+sns.distplot(-1*proj_emi_psy.loc[emi_binding['OVA Binding'] == 1, 0], color = 'red')
+plt.xticks([-5, 0, 5], [-5, 0, 5], fontsize = 26)
+plt.yticks([0.0, 0.1, 0.2, 0.3, 0.4], [0.0, 0.1, 0.2, 0.3, 0.4], fontsize = 26)
+plt.ylabel('')
+
+
+
+#%% Project isolated OHE features and compare w/ data
+
+projIsoAnt = pdModelAnt.projector(iso_onehot.values)
+projIsoAnt_vals = np.array(pdModelAnt.projector(iso_onehot.values))
+decIsoAnt = np.argmax(pdModelAnt.decider(projIsoAnt),1)
+plt.figure()
+plt.scatter(-1*projIsoAnt, iso_binding['ANT Binding'].values, c=decIsoAnt, cmap = cmap9r, s = 150, edgecolor = 'k', linewidth = 0.25)
+plt.scatter(-1*projIsoAnt_vals[125], iso_binding.iloc[125,1], c = 'k', s = 250, edgecolor = 'k', linewidth = 0.25)
+plt.xticks([-20, -10, 0, 10], [-20, -10, 0, 10], fontsize = 26)
+plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
+print('Antigen model scFab correlation: ' + str(sc.stats.spearmanr(projIsoAnt, iso_binding['ANT Binding'].values)))
 
 
 projIsoPsy = pdModelPsy.projector(iso_onehot.values)
+projIsoPsy_vals = np.array(pdModelPsy.projector(iso_onehot.values))
+decIsoPsy = np.argmax(pdModelPsy.decider(projIsoPsy), 1)
 plt.figure()
-plt.scatter(projIsoPsy, iso_binding['OVA Binding'].values)
-plt.xlabel('NN Projection')
-plt.ylabel('Measured OVA binding')
-ovaCorr = sc.stats.spearmanr(projIsoPsy, iso_binding['OVA Binding'].values)
+plt.scatter(-1*projIsoPsy, iso_binding['OVA Binding'].values, c=decIsoPsy, cmap = cmap9, s = 150, edgecolor = 'k', linewidth = 0.25)
+plt.scatter(-1*projIsoPsy_vals[125], iso_binding.iloc[125,2], c = 'k', s = 250, edgecolor = 'k', linewidth = 0.25)
+plt.xticks([-6, -4, -2, 0, 2, 4], [-6, -4, -2, 0, 2, 4], fontsize = 26)
+plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
+print('Specificity model scFab correlation: ' + str(sc.stats.spearmanr(projIsoPsy, iso_binding['OVA Binding'].values)))
 
 #%% create multilayer projector
 
@@ -201,6 +242,7 @@ pdModelPsyDeep.fit(features, targetsPsy,
                         epochs = nepochs,
                         verbose = 1)
 
+#%%
 projIsoAntDeep = pdModelAntDeep.projector(iso_onehot.values)
 plt.figure()
 plt.scatter(projIsoAntDeep, iso_binding['ANT Binding'].values)

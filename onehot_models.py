@@ -49,9 +49,9 @@ psy_test_acc = []
 for i in np.arange(25,4000,25):
     emi_data_subset = emi_data.sample(i)
     emi_data_subset_train, emi_data_subset_test, emi_data_subset_target_train, emi_data_subset_target_test = train_test_split(emi_data_subset.iloc[:,3:8000], emi_data_subset.iloc[:,0:3])
-    cv_results = cv(lda_ant, emi_data_subset.iloc[:,3:8000], emi_data_subset.iloc[:,1])
+    cv_results = cv(lda_ant, emi_data_subset.iloc[:,3:8000], emi_data_subset.iloc[:,0])
     ant_test_acc.append(np.mean(cv_results['test_score']))
-    cv_results = cv(lda_psy, emi_data_subset.iloc[:,3:8000], emi_data_subset.iloc[:,0])
+    cv_results = cv(lda_psy, emi_data_subset.iloc[:,3:8000], emi_data_subset.iloc[:,1])
     psy_test_acc.append(np.mean(cv_results['test_score']))
 
 #%%
@@ -68,14 +68,11 @@ ant_predict_acc = []
 psy_predict_acc = []
 for j in np.arange(1,25):
     knc = KNC(n_neighbors = j)
-    emi_onehot_train, emi_onehot_test, emi_binding_train, emi_binding_test = train_test_split(emi_onehot, emi_binding)
-    knc.fit(emi_onehot_train, emi_binding_train.iloc[:,0])
-    ant_predict = knc.predict(emi_onehot_test)
-    ant_predict_acc.append(accuracy_score(ant_predict, emi_binding_test.iloc[:,0]))
-    knc.fit(emi_onehot_train, emi_binding_train.iloc[:,1])
-    psy_predict = knc.predict(emi_onehot_test)
-    psy_predict_acc.append(accuracy_score(psy_predict, emi_binding_test.iloc[:,1]))
-
+    cv_results = cv(knc, emi_data.iloc[:,3:8000], emi_data.iloc[:,0])
+    ant_predict_acc.append(np.mean(cv_results['test_score']))
+    cv_results = cv(knc, emi_data.iloc[:,3:8000], emi_data.iloc[:,1])
+    psy_predict_acc.append(np.mean(cv_results['test_score']))
+    
 #%%
 plt.scatter(np.arange(1,25), ant_predict_acc, c = 'blue', edgecolor = 'k', linewidth = 0.25, s = 50)
 plt.scatter(np.arange(1,25), psy_predict_acc, c = 'red', edgecolor = 'k', linewidth = 0.25, s = 50)
@@ -129,8 +126,27 @@ plt.ylabel('')
 
 plt.figure()
 plt.scatter(emi_ant_transform, emi_psy_transform, color = 'white', edgecolor = 'k', s = 40, linewidth = 0.25)
-plt.scatter(igg_ant_transform.iloc[42:103,0], igg_psy_transform.iloc[42:103,0], color = cmap(0.15), edgecolor= 'k', s = 80, linewidth = 0.25)
+plt.scatter(igg_ant_transform.loc[igg_binding['Blosum62'] == 1,0], igg_psy_transform.loc[igg_binding['Blosum62'] == 1,0], color = cmap(0.15), edgecolor= 'k', s = 80, linewidth = 0.25)
 plt.scatter(igg_ant_transform.iloc[41:42,0], igg_psy_transform.iloc[41:42,0], color = 'black', s = 150, edgecolor= 'k', linewidth = 0.25)
+plt.scatter(igg_ant_transform.iloc[8,0], igg_psy_transform.iloc[8,0], c = 'orange', s = 150, edgecolor = 'k', linewidth = 0.25, zorder = 3)
+plt.xticks([-6, -4, -2, 0, 2, 4, 6], [-6, -4, -2, 0, 2, 4, 6], fontsize = 26)
+plt.yticks([-6, -4, -2, 0, 2, 4, 6], [-6, -4, -2, 0, 2, 4, 6], fontsize = 26)
+plt.ylabel('')
+
+plt.figure()
+plt.scatter(emi_ant_transform, emi_psy_transform, color = 'white', edgecolor = 'k', s = 40, linewidth = 0.25)
+plt.scatter(igg_ant_transform.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation']==1),0], igg_psy_transform.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation']==1),0], color = cmap(0.15), edgecolor= 'k', s = 80, linewidth = 0.25)
+plt.scatter(igg_ant_transform.iloc[41:42,0], igg_psy_transform.iloc[41:42,0], color = 'black', s = 150, edgecolor= 'k', linewidth = 0.25)
+plt.scatter(igg_ant_transform.iloc[8,0], igg_psy_transform.iloc[8,0], c = 'orange', s = 150, edgecolor = 'k', linewidth = 0.25, zorder = 3)
+plt.xticks([-6, -4, -2, 0, 2, 4, 6], [-6, -4, -2, 0, 2, 4, 6], fontsize = 26)
+plt.yticks([-6, -4, -2, 0, 2, 4, 6], [-6, -4, -2, 0, 2, 4, 6], fontsize = 26)
+plt.ylabel('')
+
+plt.figure()
+plt.scatter(emi_ant_transform, emi_psy_transform, color = 'white', edgecolor = 'k', s = 40, linewidth = 0.25)
+plt.scatter(igg_ant_transform.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation']==0),0], igg_psy_transform.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation']==0),0], color = cmap(0.15), edgecolor= 'k', s = 80, linewidth = 0.25)
+plt.scatter(igg_ant_transform.iloc[41:42,0], igg_psy_transform.iloc[41:42,0], color = 'black', s = 150, edgecolor= 'k', linewidth = 0.25)
+plt.scatter(igg_ant_transform.iloc[8,0], igg_psy_transform.iloc[8,0], c = 'orange', s = 150, edgecolor = 'k', linewidth = 0.25, zorder = 3)
 plt.xticks([-6, -4, -2, 0, 2, 4, 6], [-6, -4, -2, 0, 2, 4, 6], fontsize = 26)
 plt.yticks([-6, -4, -2, 0, 2, 4, 6], [-6, -4, -2, 0, 2, 4, 6], fontsize = 26)
 plt.ylabel('')
@@ -154,6 +170,70 @@ plt.xticks([0,1, 2, 3], [0,1, 2, 3], fontsize = 26)
 plt.yticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
 plt.ylim(-0.15, 1.45)
 print('Specificity model in-library IgG correlation: ' + str(sc.stats.spearmanr(igg_psy_transform.iloc[0:42,0], igg_binding.iloc[0:42,2])))
+
+#%%
+#novel IgG correlations
+plt.figure()
+plt.errorbar(igg_ant_transform.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),'ANT Binding'], yerr = igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),'ANT STDEV'], linewidth = 0, elinewidth = 0.25, ecolor = 'k', capsize = 3, zorder = 1)
+plt.scatter(igg_ant_transform.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),'ANT Binding'], c = cmap(0.15), s = 150, edgecolor = 'k', linewidth = 0.25, zorder = 2)
+plt.scatter(igg_ant_transform.iloc[8,0], 1.2, c = 'orange', s = 250, edgecolor = 'k', linewidth = 0.25, zorder = 3)
+plt.scatter(igg_ant_transform.iloc[41:42,0], 1, color = 'k', s = 250, edgecolor= 'k', linewidth = 0.25, zorder = 3)
+plt.xticks([1, 2, 3,4], [1, 2, 3,4], fontsize = 26)
+plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
+plt.ylim(-0.05, 1.8)
+
+plt.figure()
+plt.errorbar(igg_ant_transform.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),'ANT Binding'], yerr = igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),'ANT STDEV'], linewidth = 0, elinewidth = 0.25, ecolor = 'k', capsize = 3, zorder = 1)
+plt.scatter(igg_ant_transform.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),'ANT Binding'], c = cmap(0.15), s = 150, edgecolor = 'k', linewidth = 0.25, zorder = 2)
+plt.scatter(igg_ant_transform.iloc[8,0], 1.2, c = 'orange', s = 250, edgecolor = 'k', linewidth = 0.25, zorder = 3)
+plt.scatter(igg_ant_transform.iloc[41:42,0], 1, color = 'k', s = 250, edgecolor= 'k', linewidth = 0.25, zorder = 3)
+plt.xticks([1, 2, 3,4], [1, 2, 3,4], fontsize = 26)
+plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
+plt.ylim(-0.05, 1.8)
+
+plt.figure()
+plt.errorbar(igg_ant_transform.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT Binding'], yerr = igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT STDEV'], linewidth = 0, elinewidth = 0.25, ecolor = 'k', capsize = 3, zorder = 1)
+plt.scatter(igg_ant_transform.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT Binding'], c = cmap(0.15), s = 150, edgecolor = 'k', linewidth = 0.25, zorder = 2)
+plt.scatter(igg_ant_transform.iloc[8,0], 1.2, c = 'orange', s = 250, edgecolor = 'k', linewidth = 0.25, zorder = 3)
+plt.scatter(igg_ant_transform.iloc[41:42,0], 1, color = 'k', s = 250, edgecolor= 'k', linewidth = 0.25, zorder = 3)
+plt.xticks([1, 2, 3,4], [1, 2, 3,4], fontsize = 26)
+plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
+plt.ylim(-0.05, 1.8)
+
+print('Antigen model novel IgG correlation, interpolation: ' + str(sc.stats.mstats.spearmanr(igg_ant_transform.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),'ANT Binding'], use_ties = True)))
+print('Antigen model novel IgG correlation, extrapolation: ' + str(sc.stats.mstats.spearmanr(igg_ant_transform.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),'ANT Binding'], use_ties = True)))
+print('Antigen model novel IgG correlation: ' + str(sc.stats.mstats.spearmanr(igg_ant_transform.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT Binding'], use_ties = True)))
+
+plt.figure()
+plt.errorbar(igg_psy_transform.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),'OVA Binding'], yerr = igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),'OVA STDEV'], linewidth = 0, elinewidth = 0.25, ecolor = 'k', capsize = 3, zorder = 1)
+plt.scatter(igg_psy_transform.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),'OVA Binding'], c = cmap(0.85), s = 150, edgecolor = 'k', linewidth = 0.25, zorder = 2)
+plt.scatter(igg_psy_transform.iloc[8,0], 0.51, c = 'orange', s = 250, edgecolor = 'k', linewidth = 0.25, zorder = 3)
+plt.scatter(igg_psy_transform.iloc[41:42,0], 1, color = 'k', s = 250, edgecolor= 'k', linewidth = 0.25, zorder = 3)
+plt.xticks([-2, -1, 0,1, 2, 3], [-2, -1, 0,1, 2, 3], fontsize = 26)
+plt.yticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
+plt.ylim(-0.15, 1.45)
+
+plt.figure()
+plt.errorbar(igg_psy_transform.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),'OVA Binding'], yerr = igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),'OVA STDEV'], linewidth = 0, elinewidth = 0.25, ecolor = 'k', capsize = 3, zorder = 1)
+plt.scatter(igg_psy_transform.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),'OVA Binding'], c = cmap(0.85), s = 150, edgecolor = 'k', linewidth = 0.25, zorder = 2)
+plt.scatter(igg_psy_transform.iloc[8,0], 0.51, c = 'orange', s = 250, edgecolor = 'k', linewidth = 0.25, zorder = 3)
+plt.scatter(igg_psy_transform.iloc[41:42,0], 1, color = 'k', s = 250, edgecolor= 'k', linewidth = 0.25, zorder = 3)
+plt.xticks([-2, -1, 0,1, 2, 3], [-2, -1, 0,1, 2, 3], fontsize = 26)
+plt.yticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
+plt.ylim(-0.15, 1.45)
+
+plt.figure()
+plt.errorbar(igg_psy_transform.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA Binding'], yerr = igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA STDEV'], linewidth = 0, elinewidth = 0.25, ecolor = 'k', capsize = 3, zorder = 1)
+plt.scatter(igg_psy_transform.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA Binding'], c = cmap(0.85), s = 150, edgecolor = 'k', linewidth = 0.25, zorder = 2)
+plt.scatter(igg_psy_transform.iloc[8,0], 0.51, c = 'orange', s = 250, edgecolor = 'k', linewidth = 0.25, zorder = 3)
+plt.scatter(igg_psy_transform.iloc[41:42,0], 1, color = 'k', s = 250, edgecolor= 'k', linewidth = 0.25, zorder = 3)
+plt.xticks([-2, -1, 0,1, 2, 3], [-2, -1, 0,1, 2, 3], fontsize = 26)
+plt.yticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
+plt.ylim(-0.15, 1.45)
+print('Specificity model novel IgG correlation, interpolation: ' + str(sc.stats.mstats.spearmanr(igg_psy_transform.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),'OVA Binding'], use_ties = True)))
+print('Specificity model novel IgG correlation, extrapolation: ' + str(sc.stats.mstats.spearmanr(igg_psy_transform.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),'OVA Binding'], use_ties = True)))
+print('Specificity model novel IgG correlation: ' + str(sc.stats.mstats.spearmanr(igg_psy_transform.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA Binding'], use_ties = True)))
+
 
 #%%
 #library site sequence analysis

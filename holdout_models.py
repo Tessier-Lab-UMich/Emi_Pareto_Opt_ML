@@ -16,12 +16,12 @@ iso_reps = pd.read_csv("iso_reps.csv", header = 0, index_col = 0)
 igg_reps = pd.read_csv("igg_reps.csv", header = 0, index_col = 0)
 
 
-iso_ho = ho_seq_ind(iso_binding.index)
+iso_ho = ho_seq_ind(iso_binding.index, res_wt)
 iso_ho_reps = ho_reps(iso_ho, iso_reps)
 iso_ho_physchemvh = ho_physchemvh(iso_ho, iso_binding)
 iso_ho_binding = ho_binding(iso_ho, iso_binding)
 
-emi_ho_inverse = ho_seq_ind_inverse(emi_binding.index)
+emi_ho_inverse = ho_seq_ind_inverse(emi_binding.index, res_wt)
 emi_ho_reps_inverse = ho_reps(emi_ho_inverse, emi_reps)
 emi_ho_physchemvh_inverse = ho_physchemvh(emi_ho_inverse, emi_binding)
 emi_ho_binding_inverse = ho_binding(emi_ho_inverse, emi_binding)
@@ -64,5 +64,13 @@ for i in np.arange(len(res_ind)):
     iso_psy_correls_physchemvh.append(abs(sc.stats.spearmanr(iso_psy_transform_ho.iloc[:,0], iso_ho_binding[i].iloc[:,2])[0]))
     iso_psy_pval_physchemvh.append(abs(sc.stats.spearmanr(iso_psy_transform_ho.iloc[:,0], iso_ho_binding[i].iloc[:,2])[1]))
 
+#%%
+ant_correls = pd.read_csv("top_res_heatmap.csv", header = 0, index_col = 0)
+
+plt.figure(figsize = (10.5,10.5))
+sns.heatmap(ant_correls.iloc[0:2,:].astype('float32'), annot = ant_correls.iloc[4:6,:], fmt = '', annot_kws = {'fontsize': 24, 'fontname': 'Myriad Pro'}, cmap = 'bwr', square = True, cbar = False, vmin = 0, vmax = 1)
+
+plt.figure(figsize = (10.5,10.5))
+sns.heatmap(ant_correls.iloc[2:4,:].astype('float32'), annot = ant_correls.iloc[6:8,:], fmt = '', annot_kws = {'fontsize': 24, 'fontname': 'Myriad Pro'}, cmap = 'bwr', square = True, cbar = False, vmin = 0, vmax = 1)
 
 

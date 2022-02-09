@@ -307,60 +307,91 @@ ftSet = 'Onehot'
 titleText = f'{target}/{ftSet} rho = {corrRho} log10(p) < {corrP}'
 plt.title(titleText)
 
+
+#%%
 projIsoAntUR = pdAntUR.projector(iso_reps.values)
 plt.figure()
 plt.scatter(projIsoAntUR, iso_binding['ANT Binding'].values)
-plt.xlabel('NN Projection')
-plt.ylabel('Measured ANT binding')
 antCorr = sc.stats.spearmanr(projIsoAntUR, iso_binding['ANT Binding'].values)
 corrRho = np.round(antCorr.correlation, 2)
 corrP = np.ceil(np.log10(antCorr.pvalue))
-target = 'Antigen'
-ftSet = 'UniRep'
-titleText = f'{target}/{ftSet} rho = {corrRho} log10(p) < {corrP}'
-plt.title(titleText)
-
+plt.xticks([-0.35, -0.30, -0.25], [-0.35, -0.30, -0.25], fontsize = 26)
+plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
+plt.ylim(-0.15, 1.85)
 
 projIsoPsyUR = pdPsyUR.projector(iso_reps.values)
 plt.figure()
 plt.scatter(projIsoPsyUR, iso_binding['OVA Binding'].values)
-plt.xlabel('NN Projection')
-plt.ylabel('Measured OVA binding')
 ovaCorr = sc.stats.spearmanr(projIsoPsyUR, iso_binding['OVA Binding'].values)
 corrRho = np.round(ovaCorr.correlation, 2)
 corrP = np.ceil(np.log10(ovaCorr.pvalue))
-target = 'Ova'
-ftSet = 'UniRep'
-titleText = f'{target}/{ftSet} rho = {corrRho} log10(p) < {corrP}'
-plt.title(titleText)
+plt.xticks([-0.08, -0.04, 0.0, 0.04], [-0.08, -0.04, 0.0, 0.04], fontsize = 26)
+plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
+plt.ylim(-0.15, 1.85)
 
 
 projIsoAntPC = pdAntPC.projector(iso_physvh.values)
 plt.figure()
 plt.scatter(projIsoAntPC, iso_binding['ANT Binding'].values)
-plt.xlabel('NN Projection')
-plt.ylabel('Measured ANT binding')
 antCorr = sc.stats.spearmanr(projIsoAntPC, iso_binding['ANT Binding'].values)
 corrRho = np.round(antCorr.correlation, 2)
 corrP = np.ceil(np.log10(antCorr.pvalue))
-target = 'Antigen'
-ftSet = 'PhysVH'
-titleText = f'{target}/{ftSet} rho = {corrRho} log10(p) < {corrP}'
-plt.title(titleText)
-
+plt.xticks([-1.0, 0.0, 1.0, 2.0], [-1.0, 0.0, 1.0, 2.0], fontsize = 26)
+plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
+plt.ylim(-0.15, 1.85)
 
 projIsoPsyPC = pdPsyPC.projector(iso_physvh.values)
 plt.figure()
 plt.scatter(projIsoPsyPC, iso_binding['OVA Binding'].values)
-plt.xlabel('NN Projection')
-plt.ylabel('Measured OVA binding')
 ovaCorr = sc.stats.spearmanr(projIsoPsyPC, iso_binding['OVA Binding'].values)
 corrRho = np.round(ovaCorr.correlation, 2)
 corrP = np.ceil(np.log10(ovaCorr.pvalue))
-target = 'Ova'
-ftSet = 'PhysVH'
-titleText = f'{target}/{ftSet} rho = {corrRho} log10(p) < {corrP}'
-plt.title(titleText)
+plt.xticks([-4, -2, 0, 2, 4], [-4, -2, 0, 2, 4], fontsize = 26)
+plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
+plt.ylim(-0.15, 1.85)
+
+
+#%%
+projIsoAntUR = pdAntUR.projector(igg_reps.values)
+plt.figure()
+plt.scatter(projIsoAntUR, iso_binding['ANT Binding'].values)
+antCorr = sc.stats.spearmanr(projIsoAntUR, iso_binding['ANT Binding'].values)
+corrRho = np.round(antCorr.correlation, 2)
+corrP = np.ceil(np.log10(antCorr.pvalue))
+plt.xticks([-0.35, -0.30, -0.25], [-0.35, -0.30, -0.25], fontsize = 26)
+plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
+plt.ylim(-0.15, 1.85)
+
+projIsoPsyUR = pdPsyUR.projector(igg_reps.values)
+plt.figure()
+plt.scatter(projIsoPsyUR, iso_binding['OVA Binding'].values)
+ovaCorr = sc.stats.spearmanr(projIsoPsyUR, iso_binding['OVA Binding'].values)
+corrRho = np.round(ovaCorr.correlation, 2)
+corrP = np.ceil(np.log10(ovaCorr.pvalue))
+plt.xticks([-0.08, -0.04, 0.0, 0.04], [-0.08, -0.04, 0.0, 0.04], fontsize = 26)
+plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
+plt.ylim(-0.15, 1.85)
+
+
+projIsoAntPC = pdAntPC.projector(igg_physvh.values)
+plt.figure()
+plt.scatter(projIsoAntPC, iso_binding['ANT Binding'].values)
+antCorr = sc.stats.spearmanr(projIsoAntPC, iso_binding['ANT Binding'].values)
+corrRho = np.round(antCorr.correlation, 2)
+corrP = np.ceil(np.log10(antCorr.pvalue))
+plt.xticks([-1.0, 0.0, 1.0, 2.0], [-1.0, 0.0, 1.0, 2.0], fontsize = 26)
+plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
+plt.ylim(-0.15, 1.85)
+
+projIsoPsyPC = pdPsyPC.projector(iso_physvh.values)
+plt.figure()
+plt.scatter(projIsoPsyPC, iso_binding['OVA Binding'].values)
+ovaCorr = sc.stats.spearmanr(projIsoPsyPC, iso_binding['OVA Binding'].values)
+corrRho = np.round(ovaCorr.correlation, 2)
+corrP = np.ceil(np.log10(ovaCorr.pvalue))
+plt.xticks([-4, -2, 0, 2, 4], [-4, -2, 0, 2, 4], fontsize = 26)
+plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
+plt.ylim(-0.15, 1.85)
 
 # projIsoAntURDeep = pdAntURDeep.projector(iso_reps.values)
 # plt.figure()

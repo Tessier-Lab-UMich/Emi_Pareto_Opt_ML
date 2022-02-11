@@ -1,0 +1,2 @@
+model_checkpoint_path: "pdPsyPC_wts"
+all_model_checkpoint_paths: "pdPsyPC_wts"

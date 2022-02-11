@@ -21,7 +21,7 @@ def cvTrain(model, features, targets, nSplits, nEpochs, batchSz, initWts):
             history = model.fit(features[train], targets[train], 
                                 batch_size = batchSz, 
                                 epochs = 1,
-                                verbose = 1)
+                                verbose = 0)
             scores = model.evaluate(features[test], targets[test], verbose = 0)
             allHist[fn-1, kk] = scores[1]
         print(f'Score for fold {fn}: {model.metrics_names[0]} of {scores[0]}; {model.metrics_names[1]} of {scores[1]*100}%')

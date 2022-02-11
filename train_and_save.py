@@ -1,12 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Feb  9 13:16:30 2022
-
-@author: pkinn
-"""
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Feb  8 16:43:44 2022
+Created on Thu Feb 10 15:36:22 2022
 
 @author: pkinn
 """
@@ -20,13 +14,12 @@ from matplotlib.patches import Rectangle
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
-import numpy as np
 from sklearn.model_selection import KFold
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 from sklearn.model_selection import train_test_split
 from tensorflow.keras import layers, losses
 from tensorflow.keras.models import Model
-
+import os
 
 #%% Define NN model
 class projectorDecider(Model):
@@ -86,61 +79,82 @@ emi_physvh = physchemvh_gen(emi_binding, emi_pI.iloc[:,1])
 iso_physvh = physchemvh_gen(iso_binding, iso_pI.iloc[:,1])
 igg_physvh = physchemvh_gen(igg_binding, igg_pI.iloc[:,1])
 
-
-#%% Do KFold and record results
-
-from cvTrain import cvTrain
+#%% Train "final" models
+# Set up training parameters
 targetsAnt = emi_binding['ANT Binding'].values
 targetsPsy = emi_binding['OVA Binding'].values
-nEpoch = 500
 batch_sz = 50
-pdAntOH = deepProjectorDecider(1, emi_onehot.shape[1], 20)
+nepochs = 50
+nepochsUR = 250
+nIntermedNodes = 20
+savepath = f'deepNNWeights{os.sep}node{nIntermedNodes}{os.sep}'
 lossFn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits = True)
+
+#%% Train and save weights
+pdAntOH = deepProjectorDecider(1, emi_onehot.shape[1], nIntermedNodes)
 pdAntOH.compile(optimizer = 'adam', loss = lossFn, metrics = ['accuracy'])
-initWeights = pdAntOH.get_weights()
-[acc, loss, pdAntOHhist] = cvTrain(pdAntOH, emi_onehot.values, targetsAnt, 5, nEpoch, batch_sz, initWeights)
+pdAntOH.fit(emi_onehot.values, targetsAnt, 
+                        batch_size = batch_sz, 
+                        epochs = nepochs,
+                        verbose = 1)
+wtName = 'pdAntOH_wts'
+pdAntOH.save_weights(savepath+wtName)
 
-pdPsyOH = deepProjectorDecider(1, emi_onehot.shape[1], 20)
-lossFn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits = True)
+
+
+
+pdPsyOH = deepProjectorDecider(1, emi_onehot.shape[1], nIntermedNodes)
 pdPsyOH.compile(optimizer = 'adam', loss = lossFn, metrics = ['accuracy'])
-initWeights = pdPsyOH.get_weights()
-[acc, loss, pdPsyOHhist] = cvTrain(pdPsyOH, emi_onehot.values, targetsPsy, 5, nEpoch, batch_sz, initWeights)
+pdPsyOH.fit(emi_onehot.values, targetsPsy, 
+                        batch_size = batch_sz, 
+                        epochs = nepochs,
+                        verbose = 1)
+wtName = 'pdPsyOH_wts'
+pdPsyOH.save_weights(savepath+wtName)
 
-pdAntUR = deepProjectorDecider(1, emi_reps.shape[1], 20)
-lossFn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits = True)
+
+
+
+pdAntUR = deepProjectorDecider(1, emi_reps.shape[1], nIntermedNodes)
 pdAntUR.compile(optimizer = 'adam', loss = lossFn, metrics = ['accuracy'])
-initWeights = pdAntUR.get_weights()
-[acc, loss, pdAntURhist] = cvTrain(pdAntUR, emi_reps.values, targetsAnt, 5, nEpoch, batch_sz, initWeights)
+pdAntUR.fit(emi_reps.values, targetsAnt, 
+                        batch_size = batch_sz, 
+                        epochs = nepochsUR,
+                        verbose = 1)
+wtName = 'pdAntUR_wts'
+pdAntUR.save_weights(savepath+wtName)
 
-pdPsyUR = deepProjectorDecider(1, emi_reps.shape[1], 20)
-lossFn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits = True)
+
+
+
+pdPsyUR = deepProjectorDecider(1, emi_reps.shape[1], nIntermedNodes)
 pdPsyUR.compile(optimizer = 'adam', loss = lossFn, metrics = ['accuracy'])
-initWeights = pdPsyUR.get_weights()
-[acc, loss, pdPsyURhist] = cvTrain(pdPsyUR, emi_reps.values, targetsPsy, 5, nEpoch, batch_sz, initWeights)
+pdPsyUR.fit(emi_reps.values, targetsPsy, 
+                        batch_size = batch_sz, 
+                        epochs = nepochsUR,
+                        verbose = 1)
+wtName = 'pdPsyUR_wts'
+pdPsyUR.save_weights(savepath+wtName)
 
-pdAntPC = deepProjectorDecider(1, emi_physvh.shape[1], 20)
-lossFn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits = True)
+
+
+pdAntPC = deepProjectorDecider(1, emi_physvh.shape[1], nIntermedNodes)
 pdAntPC.compile(optimizer = 'adam', loss = lossFn, metrics = ['accuracy'])
-initWeights = pdAntPC.get_weights()
-[acc, loss, pdAntPChist] = cvTrain(pdAntPC, emi_physvh.values, targetsAnt, 5, nEpoch, batch_sz, initWeights)
+pdAntPC.fit(emi_physvh.values, targetsAnt, 
+                        batch_size = batch_sz, 
+                        epochs = nepochs,
+                        verbose = 1)
+wtName = 'pdAntPC_wts'
+pdAntPC.save_weights(savepath+wtName)
 
-pdPsyPC = deepProjectorDecider(1, emi_physvh.shape[1], 20)
-lossFn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits = True)
+
+
+pdPsyPC = deepProjectorDecider(1, emi_physvh.shape[1], nIntermedNodes)
 pdPsyPC.compile(optimizer = 'adam', loss = lossFn, metrics = ['accuracy'])
-initWeights = pdPsyPC.get_weights()
-[acc, loss, pdPsyPChist] = cvTrain(pdPsyPC, emi_physvh.values, targetsPsy, 5, nEpoch, batch_sz, initWeights)
+pdPsyPC.fit(emi_physvh.values, targetsPsy, 
+                        batch_size = batch_sz, 
+                        epochs = nepochs,
+                        verbose = 1)
+wtName = 'pdPsyPC_wts'
+pdPsyPC.save_weights(savepath+wtName)
 
-allHist = [pdAntOHhist, pdPsyOHhist, pdAntURhist, pdPsyURhist, pdAntPChist, pdPsyPChist]
-allNames = ['Ant/OH', 'Psy/OH', 'Ant/UR', 'Psy/UR', 'Ant/PC', 'Psy/PC']
-
-
-#%% plot results
-plt.figure()
-for ii in range(len(allHist)):
-    plt.subplot(3,2,ii+1)
-    plt.plot(allHist[ii].transpose())
-    plt.plot(np.mean(allHist[ii].transpose(), 1), 'k')
-    plt.title(allNames[ii])
-    
-        
-        

@@ -222,7 +222,7 @@ plt.errorbar(igg_psy_transform.loc[(igg_binding['Blosum62'] == 1) & (igg_binding
 plt.scatter(igg_psy_transform.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),'OVA Binding'], c = cmap(0.85), s = 150, edgecolor = 'k', linewidth = 0.25, zorder = 2)
 plt.scatter(igg_psy_transform.iloc[8,0], 0.51, c = 'orange', s = 250, edgecolor = 'k', linewidth = 0.25, zorder = 3)
 plt.scatter(igg_psy_transform.iloc[41:42,0], 1, color = 'k', s = 250, edgecolor= 'k', linewidth = 0.25, zorder = 3)
-plt.xticks([-2, -1, 0,1, 2, 3], [-2, -1, 0,1, 2, 3], fontsize = 26)
+plt.xticks([0,1, 2, 3], [0,1, 2, 3], fontsize = 26)
 plt.yticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
 plt.ylim(-0.15, 1.45)
 
@@ -231,7 +231,7 @@ plt.errorbar(igg_psy_transform.loc[(igg_binding['Blosum62'] == 1) & (igg_binding
 plt.scatter(igg_psy_transform.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),'OVA Binding'], c = cmap(0.85), s = 150, edgecolor = 'k', linewidth = 0.25, zorder = 2)
 plt.scatter(igg_psy_transform.iloc[8,0], 0.51, c = 'orange', s = 250, edgecolor = 'k', linewidth = 0.25, zorder = 3)
 plt.scatter(igg_psy_transform.iloc[41:42,0], 1, color = 'k', s = 250, edgecolor= 'k', linewidth = 0.25, zorder = 3)
-plt.xticks([-2, -1, 0,1, 2, 3], [-2, -1, 0,1, 2, 3], fontsize = 26)
+plt.xticks([0,1, 2, 3], [0,1, 2, 3], fontsize = 26)
 plt.yticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
 plt.ylim(-0.15, 1.45)
 

@@ -16,12 +16,12 @@ iso_reps = pd.read_csv("iso_reps.csv", header = 0, index_col = 0)
 igg_reps = pd.read_csv("igg_reps.csv", header = 0, index_col = 0)
 
 
-iso_ho = ho_seq_ind(iso_binding.index, res_wt)
+iso_ho = ho_seq_ind(iso_binding.index, res_top)
 iso_ho_reps = ho_reps(iso_ho, iso_reps)
 iso_ho_physchemvh = ho_physchemvh(iso_ho, iso_binding)
 iso_ho_binding = ho_binding(iso_ho, iso_binding)
 
-emi_ho_inverse = ho_seq_ind_inverse(emi_binding.index, res_wt)
+emi_ho_inverse = ho_seq_ind_inverse(emi_binding.index, res_top)
 emi_ho_reps_inverse = ho_reps(emi_ho_inverse, emi_reps)
 emi_ho_physchemvh_inverse = ho_physchemvh(emi_ho_inverse, emi_binding)
 emi_ho_binding_inverse = ho_binding(emi_ho_inverse, emi_binding)

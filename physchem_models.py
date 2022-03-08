@@ -44,6 +44,7 @@ igg_psy_transform = pd.DataFrame(-1*lda_psy.transform(igg_physvh)).set_index(igg
 
 
 #%%
+"""
 # sample size elbow plot
 emi_data = pd.concat([emi_binding, emi_physvh.set_index(emi_binding.index)], axis = 1)
 ant_test_acc = []
@@ -80,7 +81,7 @@ plt.scatter(np.arange(1,25), ant_predict_acc, c = 'red', edgecolor = 'k', linewi
 plt.scatter(np.arange(1,25), psy_predict_acc, c = 'blue', edgecolor = 'k', linewidth = 0.25, s = 50)
 plt.xticks(fontsize = 24)
 plt.yticks([0.8, 0.9, 1.0], [80, 90, 100], fontsize = 24)
-
+"""
 #%%
 #model accuracy distributions
 plt.figure()

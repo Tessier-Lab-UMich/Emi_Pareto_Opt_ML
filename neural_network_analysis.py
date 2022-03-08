@@ -79,14 +79,6 @@ emi_physvh = physchemvh_gen(emi_binding, emi_pI.iloc[:,1])
 iso_physvh = physchemvh_gen(iso_binding, iso_pI.iloc[:,1])
 igg_physvh = physchemvh_gen(igg_binding, igg_pI.iloc[:,1])
 
-#%% Train "final" models
-from cvTrain import cvTrain
-targetsAnt = emi_binding['ANT Binding'].values
-targetsPsy = emi_binding['OVA Binding'].values
-batch_sz = 50
-nepochs = 50
-nepochsUR = 250
-
 #%% Make NN Instances and load weights
 nIntermedNodes = 20
 wtPath = f'deepNNWeights{os.sep}node{nIntermedNodes}{os.sep}'

@@ -9,8 +9,6 @@ import tensorflow as tf
 from holdout_utils import *
 from physchem_gen import physchemvh_gen
 from onehot_gen import onehot_gen, shiftedColorMap
-import matplotlib
-from matplotlib.patches import Rectangle
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -55,6 +53,7 @@ class deepProjectorDecider(Model):
         projected = self.projector(x)
         decided = self.decider(projected)
         return decided
+
 #%% Load data into dataframes
 emi_binding = pd.read_csv("emi_binding.csv", header = 0, index_col = 0)
 iso_binding = pd.read_csv("iso_binding.csv", header = 0, index_col = 0)
@@ -218,7 +217,6 @@ plt.xlabel('')
 #%% Project isolated OHE features and compare w/ data
 projIsoAntOH = pdAntOH.projector(iso_onehot.values)
 decIsoAntOH = np.argmax(pdAntOH.decider(np.array(projIsoAntOH)), 1)
-
 plt.figure()
 plt.scatter(-1*projIsoAntOH, iso_binding['ANT Binding'].values, c = decIsoAntOH, cmap = cmap9r, s = 150, edgecolor = 'k', linewidth = 0.25)
 plt.scatter(-1*projIsoAntOH[125], iso_binding.iloc[125,1], c = 'k', s = 250, edgecolor = 'k', linewidth = 0.25)
@@ -236,7 +234,6 @@ plt.ylim(-0.15, 1.85)
 
 projIsoPsyOH = pdPsyOH.projector(iso_onehot.values)
 decIsoPsyOH = np.argmax(pdPsyOH.decider(np.array(projIsoPsyOH)), 1)
-
 plt.figure()
 plt.scatter(projIsoPsyOH, iso_binding['OVA Binding'].values, c = decIsoPsyOH, cmap = cmap9, s = 150, edgecolor = 'k', linewidth = 0.25)
 plt.scatter(projIsoPsyOH[125], iso_binding.iloc[125,2], c = 'k', s = 250, edgecolor = 'k', linewidth = 0.25)
@@ -482,9 +479,6 @@ seqSet = 'extrap'
 titleText = f'{target}/{ftSet}/{seqSet} rho = {corrRho} log10(p) < {corrP}'
 #plt.title(titleText)
 
-print('Antigen model novel IgG correlation, interpolation: ' + str(sc.stats.mstats.spearmanr(projIggAntPC.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),'ANT Binding'], use_ties = True)))
-print('Antigen model novel IgG correlation, extrapolation: ' + str(sc.stats.mstats.spearmanr(projIggAntPC.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),'ANT Binding'], use_ties = True)))
-print('Antigen model novel IgG correlation: ' + str(sc.stats.mstats.spearmanr(projIggAntPC.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT Binding'], use_ties = True)))
 
 plt.figure()
 plt.errorbar(-1*projIggPsyPC.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA Binding'], yerr = igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT STDEV'], linewidth = 0, elinewidth = 0.25, ecolor = 'k', capsize = 3, zorder = 1)
@@ -502,9 +496,5 @@ ftSet = 'PhysChem'
 seqSet = 'extrap'
 titleText = f'{target}/{ftSet}/{seqSet} rho = {corrRho} log10(p) < {corrP}'
 #plt.title(titleText)
-
-print('Specificity model novel IgG correlation, interpolation: ' + str(sc.stats.mstats.spearmanr(projIggPsyPC.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),'ANT Binding'], use_ties = True)))
-print('Specificity model novel IgG correlation, extrapolation: ' + str(sc.stats.mstats.spearmanr(projIggPsyPC.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),'ANT Binding'], use_ties = True)))
-print('Specificity model novel IgG correlation: ' + str(sc.stats.mstats.spearmanr(projIggAntPC.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT Binding'], use_ties = True)))
 
 

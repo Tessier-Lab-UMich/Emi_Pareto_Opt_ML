@@ -15,7 +15,6 @@ emi_reps = pd.read_csv("emi_reps.csv", header = 0, index_col = 0)
 iso_reps = pd.read_csv("iso_reps.csv", header = 0, index_col = 0)
 igg_reps = pd.read_csv("igg_reps.csv", header = 0, index_col = 0)
 
-
 #%%
 lda_ant = LDA()
 cv_results = cv(lda_ant, emi_reps, emi_binding.iloc[:,0])
@@ -157,8 +156,8 @@ print('Specificity model in-library IgG correlation: ' + str(sc.stats.spearmanr(
 #experimental pareto
 plt.figure()
 plt.errorbar(igg_binding.iloc[0:41,1], igg_binding.iloc[0:41,2], xerr = igg_binding.iloc[0:41,3], yerr = igg_binding.iloc[0:41,4], linewidth = 0, elinewidth = 0.5, ecolor = 'k', capsize = 3, zorder = 1)
-plt.scatter(igg_binding.iloc[0:41,1], igg_binding.iloc[0:41,2], s = 150, c = cmap(0.15), edgecolor = 'k', linewidth = 0.5, zorder = 2)
-plt.scatter(igg_binding.loc[igg_binding['Scaffold'] == 1,'ANT Binding'], igg_binding.loc[igg_binding['Scaffold'] == 1,'OVA Binding'], s = 150, c = cmap(0.65), edgecolor = 'k', linewidth = 0.5, zorder = 3)
+plt.scatter(igg_binding.iloc[0:41,1], igg_binding.iloc[0:41,2], s = 150, c = 'blueviolet', edgecolor = 'k', linewidth = 0.5, zorder = 2)
+#plt.scatter(igg_binding.loc[igg_binding['Scaffold'] == 1,'ANT Binding'], igg_binding.loc[igg_binding['Scaffold'] == 1,'OVA Binding'], s = 150, c = cmap(0.65), edgecolor = 'k', linewidth = 0.5, zorder = 3)
 plt.scatter(1,1, s = 200, c = 'k', edgecolor = 'k', linewidth = 0.5, zorder = 4)
 plt.scatter(1.2,0.51, s = 200, c = cmap(0.85), edgecolor = 'k', linewidth = 0.5, zorder = 4)
 plt.xticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
@@ -189,6 +188,29 @@ plt.yticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
 plt.ylim(-0.15, 1.45)
 print('Specificity model novel IgG correlation: ' + str(sc.stats.spearmanr(igg_psy_transform.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA Binding'])))
 
+
+#%%
+#novel IgG correlations without Blosum62 filter
+print('Antigen model novel IgG correlation: ' + str(sc.stats.spearmanr(igg_ant_transform.iloc[42:100,0], igg_binding.iloc[42:100,1])))
+print('Specificity model novel IgG correlation: ' + str(sc.stats.spearmanr(igg_psy_transform.iloc[42:100,0], igg_binding.iloc[42:100,2])))
+
+
+#%%
+#experimental pareto
+plt.figure()
+plt.errorbar(igg_binding.iloc[0:41,1], igg_binding.iloc[0:41,2], xerr = igg_binding.iloc[0:41,3], yerr = igg_binding.iloc[0:41,4], linewidth = 0, elinewidth = 0.5, ecolor = 'k', capsize = 3, zorder = 1)
+plt.scatter(igg_binding.iloc[0:41,1], igg_binding.iloc[0:41,2], s = 150, c = 'blueviolet', edgecolor = 'k', linewidth = 0.5, zorder = 2)
+plt.errorbar(igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT Binding'], igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA Binding'], yerr = igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT STDEV'], linewidth = 0, elinewidth = 0.25, ecolor = 'k', capsize = 3, zorder = 1)
+plt.scatter(igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT Binding'], igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA Binding'], c = 'mediumspringgreen', s = 150, edgecolor = 'k', linewidth = 0.25, zorder = 2)
+#plt.scatter(igg_binding.loc[igg_binding['Scaffold'] == 1,'ANT Binding'], igg_binding.loc[igg_binding['Scaffold'] == 1,'OVA Binding'], s = 150, c = cmap(0.65), edgecolor = 'k', linewidth = 0.5, zorder = 3)
+plt.scatter(1,1, s = 250, c = 'k', edgecolor = 'k', linewidth = 0.5, zorder = 4)
+plt.scatter(1.2,0.51, s = 250, c = 'orange', edgecolor = 'k', linewidth = 0.5, zorder = 4)
+plt.scatter(1.28, 0.3, s = 250, c = 'red', edgecolor = 'k', linewidth = 0.5, zorder = 4)
+
+plt.xticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
+plt.xlim(-0.05, 1.45)
+plt.yticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
+plt.ylim(-0.15, 1.35)
 
 
 

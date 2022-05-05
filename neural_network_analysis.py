@@ -434,11 +434,6 @@ seqSet = 'extrap'
 titleText = f'{target}/{ftSet}/{seqSet} rho = {corrRho} log10(p) < {corrP}'
 #plt.title(titleText)
 
-
-print('Antigen model novel IgG correlation, interpolation: ' + str(sc.stats.mstats.spearmanr(projIggAntUR.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),'ANT Binding'], use_ties = True)))
-print('Antigen model novel IgG correlation, extrapolation: ' + str(sc.stats.mstats.spearmanr(projIggAntUR.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),'ANT Binding'], use_ties = True)))
-print('Antigen model novel IgG correlation: ' + str(sc.stats.mstats.spearmanr(projIggAntUR.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT Binding'], use_ties = True)))
-
 plt.figure()
 plt.errorbar(projIggPsyUR.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA Binding'], yerr = igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT STDEV'], linewidth = 0, elinewidth = 0.25, ecolor = 'k', capsize = 3, zorder = 1)
 plt.scatter(projIggPsyUR.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA Binding'], c = cmap(0.85), s = 150, edgecolor = 'k', linewidth = 0.25, zorder = 2)
@@ -455,10 +450,6 @@ ftSet = 'UniRep'
 seqSet = 'extrap'
 titleText = f'{target}/{ftSet}/{seqSet} rho = {corrRho} log10(p) < {corrP}'
 #plt.title(titleText)
-
-print('Specificity model novel IgG correlation, interpolation: ' + str(sc.stats.mstats.spearmanr(projIggPsyUR.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 1),'ANT Binding'], use_ties = True)))
-print('Specificity model novel IgG correlation, extrapolation: ' + str(sc.stats.mstats.spearmanr(projIggPsyUR.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),0], igg_binding.loc[(igg_binding['Blosum62'] == 1) & (igg_binding['Interpolation'] == 0),'ANT Binding'], use_ties = True)))
-print('Specificity model novel IgG correlation: ' + str(sc.stats.mstats.spearmanr(projIggAntUR.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT Binding'], use_ties = True)))
 
 
 # physicochemical features

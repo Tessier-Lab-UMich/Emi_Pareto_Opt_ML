@@ -121,10 +121,10 @@ plt.figure()
 sns.distplot(-1*projEmiAntOH.loc[emi_binding['ANT Binding'] == 0, 0], color = 'red')
 sns.distplot(-1*projEmiAntOH.loc[emi_binding['ANT Binding'] == 1, 0], color = 'blue')
 predVals = np.argmax(pdAntOH.decider(pdAntOH.projector(emi_onehot.values)), 1)
-accFinal = sum(predVals==targetsAnt)/len(predVals)
+#accFinal = sum(predVals==targetsAnt)/len(predVals)
 target = 'Antigen'
 ftSet = 'Onehot'
-titleText = f'{target}/{ftSet} Final Accuracy: {np.round(accFinal,3)}'
+#titleText = f'{target}/{ftSet} Final Accuracy: {np.round(accFinal,3)}'
 #plt.title(titleText)
 EmiAntOHX = [-10, -5, 0, 5]
 plt.xticks(EmiAntOHX, EmiAntOHX, fontsize = 26)
@@ -138,10 +138,10 @@ plt.figure()
 sns.distplot(projEmiPsyOH.loc[emi_binding['OVA Binding'] == 0, 0], color = 'blue')
 sns.distplot(projEmiPsyOH.loc[emi_binding['OVA Binding'] == 1, 0], color = 'red')
 predVals = np.argmax(pdPsyOH.decider(pdPsyOH.projector(emi_onehot.values)), 1)
-accFinal = sum(predVals==targetsPsy)/len(predVals)
+#accFinal = sum(predVals==targetsPsy)/len(predVals)
 target = 'Ova'
 ftSet = 'Onehot'
-titleText = f'{target}/{ftSet} Final Accuracy: {np.round(accFinal,3)}'
+#titleText = f'{target}/{ftSet} Final Accuracy: {np.round(accFinal,3)}'
 #plt.title(titleText)
 EmiPsyOHX = [-20, -10, 0, 10,  20]
 plt.xticks(EmiPsyOHX, EmiPsyOHX, fontsize = 26)
@@ -154,10 +154,10 @@ plt.figure()
 sns.distplot(projEmiAntUR.loc[emi_binding['ANT Binding'] == 0, 0], color = 'red')
 sns.distplot(projEmiAntUR.loc[emi_binding['ANT Binding'] == 1, 0], color = 'blue')
 predVals = np.argmax(pdAntUR.decider(pdAntUR.projector(emi_reps.values)), 1)
-accFinal = sum(predVals==targetsAnt)/len(predVals)
+#accFinal = sum(predVals==targetsAnt)/len(predVals)
 target = 'Antigen'
 ftSet = 'UniRep'
-titleText = f'{target}/{ftSet} Final Accuracy: {np.round(accFinal,3)}'
+#titleText = f'{target}/{ftSet} Final Accuracy: {np.round(accFinal,3)}'
 EmiAntURX = [-1.5,-1., -0.5, 0.0, 0.5, 1.0]
 #plt.title(titleText)
 plt.xticks(EmiAntURX,EmiAntURX, fontsize = 26)
@@ -171,10 +171,10 @@ plt.figure()
 sns.distplot(projEmiPsyUR.loc[emi_binding['OVA Binding'] == 0, 0], color = 'blue')
 sns.distplot(projEmiPsyUR.loc[emi_binding['OVA Binding'] == 1, 0], color = 'red')
 predVals = np.argmax(pdPsyUR.decider(pdPsyUR.projector(emi_reps.values)), 1)
-accFinal = sum(predVals==targetsPsy)/len(predVals)
+#accFinal = sum(predVals==targetsPsy)/len(predVals)
 target = 'Ova'
 ftSet = 'UniRep'
-titleText = f'{target}/{ftSet} Final Accuracy: {np.round(accFinal,3)}'
+#titleText = f'{target}/{ftSet} Final Accuracy: {np.round(accFinal,3)}'
 #plt.title(titleText)
 EmiPsyURX = [-2, -1, 0, 1, 2]
 plt.xticks(EmiPsyURX, EmiPsyURX, fontsize = 26)
@@ -186,10 +186,10 @@ plt.figure()
 sns.distplot(-1*projEmiAntPC.loc[emi_binding['ANT Binding'] == 0, 0], color = 'red')
 sns.distplot(-1*projEmiAntPC.loc[emi_binding['ANT Binding'] == 1, 0], color = 'blue')
 predVals = np.argmax(pdAntPC.decider(pdAntPC.projector(emi_physvh.values)), 1)
-accFinal = sum(predVals==targetsAnt)/len(predVals)
+#accFinal = sum(predVals==targetsAnt)/len(predVals)
 target = 'Antigen'
 ftSet = 'PhysChem'
-titleText = f'{target}/{ftSet} Final Accuracy: {np.round(accFinal,3)}'
+#titleText = f'{target}/{ftSet} Final Accuracy: {np.round(accFinal,3)}'
 #plt.title(titleText)
 EmiAntPCX = [-8, -4, 0, 4]
 plt.xticks(EmiAntPCX, EmiAntPCX, fontsize = 26)
@@ -202,10 +202,10 @@ plt.figure()
 sns.distplot(-1*projEmiPsyPC.loc[emi_binding['OVA Binding'] == 0, 0], color = 'blue')
 sns.distplot(-1*projEmiPsyPC.loc[emi_binding['OVA Binding'] == 1, 0], color = 'red')
 predVals = np.argmax(pdPsyPC.decider(pdPsyPC.projector(emi_physvh.values)), 1)
-accFinal = sum(predVals==targetsPsy)/len(predVals)
+#accFinal = sum(predVals==targetsPsy)/len(predVals)
 target = 'Ova'
 ftSet = 'PhysChem'
-titleText = f'{target}/{ftSet} Final Accuracy: {np.round(accFinal,3)}'
+#titleText = f'{target}/{ftSet} Final Accuracy: {np.round(accFinal,3)}'
 #plt.title(titleText)
 EmiPsyPCX = [-20, -10, 0, 10,  20]
 plt.xticks(EmiPsyPCX, EmiPsyPCX, fontsize = 26)
@@ -222,10 +222,8 @@ plt.scatter(-1*projIsoAntOH, iso_binding['ANT Binding'].values, c = decIsoAntOH,
 plt.scatter(-1*projIsoAntOH[125], iso_binding.iloc[125,1], c = 'k', s = 250, edgecolor = 'k', linewidth = 0.25)
 #plt.xlabel('NN Projection')
 #plt.ylabel('Measured ANT binding')
-antCorr = sc.stats.spearmanr(projIsoAntOH, iso_binding['ANT Binding'].values)
-corrRho = np.round(antCorr.correlation, 2)
-corrP = np.ceil(np.log10(antCorr.pvalue))
-titleText = f'Antigen OneHot rho = {corrRho} log10(p) < {corrP}'
+print(sc.stats.spearmanr(projIsoAntOH, iso_binding['ANT Binding'].values))
+print(sc.stats.pearsonr(np.array(projIsoAntOH).flatten(), iso_binding['ANT Binding'].values))
 plt.title(titleText)
 plt.xticks(fontsize = 26)
 plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
@@ -240,6 +238,7 @@ plt.scatter(projIsoPsyOH[125], iso_binding.iloc[125,2], c = 'k', s = 250, edgeco
 #plt.xlabel('NN Projection')
 #plt.ylabel('Measured OVA binding')
 ovaCorr = sc.stats.spearmanr(projIsoPsyOH, iso_binding['OVA Binding'].values)
+print(sc.stats.pearsonr(np.array(projIsoPsyOH).flatten(), iso_binding['OVA Binding'].values))
 corrRho = np.round(ovaCorr.correlation, 2)
 corrP = np.ceil(np.log10(ovaCorr.pvalue))
 titleText = f'OVA OneHot rho = {corrRho} log10(p) < {corrP}'
@@ -255,6 +254,7 @@ plt.figure()
 plt.scatter(projIsoAntUR, iso_binding['ANT Binding'].values, c = decIsoAntUR, cmap = cmap9r, s = 150, edgecolor = 'k', linewidth = 0.25)
 plt.scatter(projIsoAntUR[125], iso_binding.iloc[125,1], c = 'k', s = 250, edgecolor = 'k', linewidth = 0.25)
 antCorr = sc.stats.spearmanr(projIsoAntUR, iso_binding['ANT Binding'].values)
+print(sc.stats.pearsonr(np.array(projIsoAntUR).flatten(), iso_binding['ANT Binding'].values))
 corrRho = np.round(antCorr.correlation, 2)
 corrP = np.ceil(np.log10(antCorr.pvalue))
 EmiAntURX = [-1.0, -0.5, 0.0, 0.5]
@@ -269,6 +269,7 @@ plt.figure()
 plt.scatter(projIsoPsyUR, iso_binding['OVA Binding'].values, c = decIsoPsyUR, cmap = cmap9, s = 150, edgecolor = 'k', linewidth = 0.25)
 plt.scatter(projIsoPsyUR[125], iso_binding.iloc[125,2], c = 'k', s = 250, edgecolor = 'k', linewidth = 0.25)
 ovaCorr = sc.stats.spearmanr(projIsoPsyUR, iso_binding['OVA Binding'].values)
+print(sc.stats.pearsonr(np.array(projIsoPsyUR).flatten(), iso_binding['OVA Binding'].values))
 corrRho = np.round(ovaCorr.correlation, 2)
 corrP = np.ceil(np.log10(ovaCorr.pvalue))
 EmiPsyURX = [-1.0, -0.5, 0.0, 0.5, 1.0, 1.5]
@@ -283,6 +284,7 @@ plt.figure()
 plt.scatter(-1*projIsoAntPC, iso_binding['ANT Binding'].values, c = decIsoAntPC, cmap = cmap9r, s = 150, edgecolor = 'k', linewidth = 0.25)
 plt.scatter(-1*projIsoAntPC[125], iso_binding.iloc[125,1], c = 'k', s = 250, edgecolor = 'k', linewidth = 0.25)
 antCorr = sc.stats.spearmanr(projIsoAntPC, iso_binding['ANT Binding'].values)
+print(sc.stats.pearsonr(np.array(projIsoAntPC).flatten(), iso_binding['ANT Binding'].values))
 corrRho = np.round(antCorr.correlation, 2)
 corrP = np.ceil(np.log10(antCorr.pvalue))
 EmiAntPCX = [-6, -4, -2, 0, 2, 4]
@@ -295,6 +297,7 @@ projIsoPsyPC = pdPsyPC.projector(iso_physvh.values)
 decIsoPsyPC = np.argmax(pdPsyPC.decider(np.array(projIsoPsyPC)),1)
 plt.figure()
 ovaCorr = sc.stats.spearmanr(projIsoPsyPC, iso_binding['OVA Binding'].values)
+print(sc.stats.pearsonr(np.array(projIsoPsyPC).flatten(), iso_binding['OVA Binding'].values))
 plt.scatter(-1*projIsoPsyPC, iso_binding['OVA Binding'].values, c = decIsoPsyPC, cmap = cmap9, s = 150, edgecolor = 'k', linewidth = 0.25)
 plt.scatter(-1*projIsoPsyPC[125], iso_binding.iloc[125,2], c = 'k', s = 250, edgecolor = 'k', linewidth = 0.25)
 corrRho = np.round(ovaCorr.correlation, 2)
@@ -366,16 +369,17 @@ plt.xticks([ 1, 2, 3, 4], [1, 2, 3, 4], fontsize = 26)
 plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
 plt.ylim(-0.05, 1.65)
 antCorr = sc.stats.spearmanr(projIggAntOH.iloc[0:41,0], igg_binding.iloc[0:41,1].values)
+print(sc.stats.pearsonr(projIggAntOH.iloc[0:41,0], igg_binding.iloc[0:41,1].values))
 
 plt.figure()
-plt.errorbar(projIggPsyUR.iloc[0:41,0], igg_binding.iloc[0:41,2], yerr = igg_binding.iloc[0:41,4], linewidth = 0, elinewidth = 0.5, ecolor = 'k', capsize = 3, zorder = 1)
-plt.scatter(projIggPsyUR.iloc[0:41,0], igg_binding.iloc[0:41,2], c = cmap(0.85), s = 150, edgecolor = 'k', linewidth = 0.25, zorder = 2)
-plt.scatter(projIggPsyUR.iloc[41:42,0], 1, color = 'k', s = 250, edgecolor= 'k', linewidth = 0.25)
+plt.errorbar(projIggPsyOH.iloc[0:41,0], igg_binding.iloc[0:41,2], yerr = igg_binding.iloc[0:41,4], linewidth = 0, elinewidth = 0.5, ecolor = 'k', capsize = 3, zorder = 1)
+plt.scatter(projIggPsyOH.iloc[0:41,0], igg_binding.iloc[0:41,2], c = cmap(0.85), s = 150, edgecolor = 'k', linewidth = 0.25, zorder = 2)
+plt.scatter(projIggPsyOH.iloc[41:42,0], 1, color = 'k', s = 250, edgecolor= 'k', linewidth = 0.25)
 plt.xticks([0.0, 0.5, 1.0, 1.5], [0.0, 0.5, 1.0, 1.5], fontsize = 26)
 plt.yticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
 plt.ylim(-0.15, 1.45)
-psyCorr = sc.stats.spearmanr(projIggPsyUR.iloc[0:41,0], igg_binding.iloc[0:41,2].values)
-
+psyCorr = sc.stats.spearmanr(projIggPsyOH.iloc[0:41,0], igg_binding.iloc[0:41,2].values)
+print(sc.stats.pearsonr(projIggPsyOH.iloc[0:41,0], igg_binding.iloc[0:41,2].values))
 
 
 plt.figure()
@@ -386,6 +390,7 @@ plt.xticks([-0.25, 0.00, 0.25,0.50, 0.75], [-0.25, 0.00, 0.25,0.50, 0.75], fonts
 plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
 plt.ylim(-0.05, 1.65)
 antCorr = sc.stats.spearmanr(projIggAntUR.iloc[0:41,0], igg_binding.iloc[0:41,1].values)
+print(sc.stats.pearsonr(projIggAntUR.iloc[0:41,0], igg_binding.iloc[0:41,1].values))
 
 plt.figure()
 plt.errorbar(projIggPsyUR.iloc[0:41,0], igg_binding.iloc[0:41,2], yerr = igg_binding.iloc[0:41,4], linewidth = 0, elinewidth = 0.5, ecolor = 'k', capsize = 3, zorder = 1)
@@ -395,7 +400,7 @@ plt.xticks([0.0, 0.5, 1.0, 1.5], [0.0, 0.5, 1.0, 1.5], fontsize = 26)
 plt.yticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
 plt.ylim(-0.15, 1.45)
 psyCorr = sc.stats.spearmanr(projIggPsyUR.iloc[0:41,0], igg_binding.iloc[0:41,2].values)
-
+print(sc.stats.pearsonr(projIggPsyUR.iloc[0:41,0], igg_binding.iloc[0:41,2].values))
 
 
 plt.figure()
@@ -406,6 +411,7 @@ plt.xticks([-1, 0, 1, 2, 3, 4], [-1, 0, 1, 2, 3, 4], fontsize = 26)
 plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
 plt.ylim(-0.05, 1.65)
 antCorr = sc.stats.spearmanr(projIggAntPC.iloc[0:41,0], igg_binding.iloc[0:41,1].values)
+print(sc.stats.pearsonr(projIggAntPC.iloc[0:41,0], igg_binding.iloc[0:41,1].values))
 
 plt.figure()
 plt.errorbar(-1*projIggAntPC.iloc[0:41,0], igg_binding.iloc[0:41,2], yerr = igg_binding.iloc[0:41,4], linewidth = 0, elinewidth = 0.5, ecolor = 'k', capsize = 3, zorder = 1)
@@ -415,6 +421,7 @@ plt.xticks([-1, 0, 1, 2, 3, 4], [-1, 0, 1, 2, 3, 4], fontsize = 26)
 plt.yticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
 plt.ylim(-0.15, 1.45)
 psyCorr = sc.stats.spearmanr(projIggPsyPC.iloc[0:41,0], igg_binding.iloc[0:41,2].values)
+print(sc.stats.pearsonr(projIggPsyPC.iloc[0:41,0], igg_binding.iloc[0:41,2].values))
 
 #%%
 plt.figure()
@@ -426,6 +433,7 @@ plt.xticks([0.1, 0.3, 0.5, 0.7, 0.9], [0.1, 0.3, 0.5, 0.7, 0.9], fontsize = 26)
 plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
 plt.ylim(-0.05, 1.8)
 antCorr = sc.stats.mstats.spearmanr(projIggAntUR.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT Binding'], use_ties = 'True')
+print(sc.stats.pearsonr(projIggAntUR.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT Binding']))
 corrRho = np.round(antCorr.correlation, 2)
 corrP = np.ceil(np.log10(antCorr.pvalue))
 target = 'Ant'
@@ -443,6 +451,8 @@ plt.xticks([0.2, 0.6, 1.0, 1.4], [0.2, 0.6, 1.0, 1.4], fontsize = 26)
 plt.yticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
 plt.ylim(-0.15, 1.35)
 ovaCorr = sc.stats.mstats.spearmanr(projIggPsyUR.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA Binding'])
+print(sc.stats.pearsonr(projIggPsyUR.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA Binding']))
+
 corrRho = np.round(ovaCorr.correlation, 2)
 corrP = np.ceil(np.log10(ovaCorr.pvalue))
 target = 'Ova'
@@ -462,6 +472,8 @@ plt.xticks([-1, 0, 1, 2, 3,4], [-1, 0, 1, 2, 3,4], fontsize = 26)
 plt.yticks([0.0, 0.4, 0.8, 1.2, 1.6], [0.0, 0.4, 0.8, 1.2, 1.6], fontsize = 26)
 plt.ylim(-0.05, 1.8)
 antCorr = sc.stats.mstats.spearmanr(projIggAntPC.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT Binding'], use_ties = 'True')
+print(sc.stats.pearsonr(projIggAntPC.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT Binding']))
+
 corrRho = np.round(antCorr.correlation, 2)
 corrP = np.ceil(np.log10(antCorr.pvalue))
 target = 'Ant'
@@ -480,6 +492,8 @@ plt.xticks([2,6,10,14], [2,6,10,14], fontsize = 26)
 plt.yticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
 plt.ylim(-0.15, 1.35)
 ovaCorr = sc.stats.mstats.spearmanr(projIggPsyPC.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA Binding'])
+print(sc.stats.pearsonr(projIggPsyPC.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA Binding']))
+
 corrRho = np.round(ovaCorr.correlation, 2)
 corrP = np.ceil(np.log10(ovaCorr.pvalue))
 target = 'Ova'

@@ -339,4 +339,12 @@ plt.xticks(fontsize = 26)
 print('Specificity model scalings and site enrichment correlation: ' + str(sc.stats.spearmanr(pd.DataFrame(ldaScaleMatSpecFilt.T).values.flatten(), diff_agg_spec.values.flatten(), nan_policy = 'omit')))
 
 
+#%%
+print('Antigen model scFab correlation: ' + str(sc.stats.pearsonr(iso_ant_transform.iloc[:,0], iso_binding.iloc[:,1])))
+print('Specificity model scFab correlation: ' + str(sc.stats.pearsonr(iso_psy_transform.iloc[:,0], iso_binding.iloc[:,2])))
+print('Antigen model in-library IgG correlation: ' + str(sc.stats.pearsonr(igg_ant_transform.iloc[0:42,0], igg_binding.iloc[0:42,1])))
+print('Specificity model in-library IgG correlation: ' + str(sc.stats.pearsonr(igg_psy_transform.iloc[0:42,0], igg_binding.iloc[0:42,2])))
+
+
+
 

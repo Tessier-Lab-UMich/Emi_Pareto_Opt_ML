@@ -191,4 +191,13 @@ plt.yticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
 plt.ylim(-0.15, 1.45)
 print('Specificity model novel IgG correlation: ' + str(sc.stats.spearmanr(igg_psy_transform.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA Binding'])))
 
+#%%
+print('Antigen model scFab correlation: ' + str(sc.stats.pearsonr(iso_ant_transform.iloc[:,0], iso_binding.iloc[:,1])))
+print('Specificity model scFab correlation: ' + str(sc.stats.pearsonr(iso_psy_transform.iloc[:,0], iso_binding.iloc[:,2])))
+print('Antigen model in-library IgG correlation: ' + str(sc.stats.pearsonr(igg_ant_transform.iloc[0:42,0], igg_binding.iloc[0:42,1])))
+print('Specificity model in-library IgG correlation: ' + str(sc.stats.pearsonr(igg_psy_transform.iloc[0:42,0], igg_binding.iloc[0:42,2])))
+print('Antigen model novel IgG correlation: ' + str(sc.stats.pearsonr(igg_ant_transform.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT Binding'])))
+print('Specificity model novel IgG correlation: ' + str(sc.stats.pearsonr(igg_psy_transform.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA Binding'])))
+
+
 

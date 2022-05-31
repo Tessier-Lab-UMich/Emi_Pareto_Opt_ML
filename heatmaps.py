@@ -13,7 +13,7 @@ plt.figure(figsize = (10,4))
 sns.heatmap(figure4.iloc[0:3,0:3].T, annot = figure4.iloc[0:3,3:6].T, fmt = '', annot_kws = {'fontsize': 26, 'fontname': 'Myriad Pro'}, cmap = 'bwr', square = True, cbar = False, vmin = 0, vmax = 1.05)
 plt.rcParams["font.family"] = 'Myriad Pro'
 
-plt.figure(figsize = (10,10))
+plt.figure(figsize = (10,4))
 sns.heatmap(figure4.iloc[0:3,6:9].T, annot = figure4.iloc[0:3,9:12].T, fmt = '', annot_kws = {'fontsize': 26, 'fontname': 'Myriad Pro'}, cmap = 'bwr', square = True, cbar = False, vmin = 0, vmax = 1.05)
 plt.rcParams["font.family"] = 'Myriad Pro'
 

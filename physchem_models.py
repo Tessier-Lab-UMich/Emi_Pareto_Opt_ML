@@ -46,7 +46,7 @@ igg_psy_transform = pd.DataFrame(-1*lda_psy.transform(igg_physvh)).set_index(igg
 #%%
 """
 # sample size elbow plot
-emi_data = pd.concat([emi_binding, emi_physvh.set_index(emi_binding.index)], axis = 1)
+
 ant_test_acc = []
 psy_test_acc = []
 for i in np.arange(25,4000,25):
@@ -66,7 +66,7 @@ plt.yticks([0.5, 0.6, 0.7,0.8, 0.9, 1.0], [50, 60, 70, 80, 90, 100], fontsize = 
 #%%
 #KNN of sequences
 from sklearn.neighbors import KNeighborsClassifier as KNC
-
+emi_data = pd.concat([emi_binding, emi_physvh.set_index(emi_binding.index)], axis = 1)
 ant_predict_acc = []
 psy_predict_acc = []
 for j in np.arange(1,25):
@@ -77,8 +77,8 @@ for j in np.arange(1,25):
     psy_predict_acc.append(np.mean(cv_results['test_score']))
     
 #%%
-plt.scatter(np.arange(1,25), ant_predict_acc, c = 'red', edgecolor = 'k', linewidth = 0.25, s = 50)
-plt.scatter(np.arange(1,25), psy_predict_acc, c = 'blue', edgecolor = 'k', linewidth = 0.25, s = 50)
+plt.scatter(np.arange(1,25), ant_predict_acc, c = 'blue', edgecolor = 'k', linewidth = 0.25, s = 50)
+plt.scatter(np.arange(1,25), psy_predict_acc, c = 'red', edgecolor = 'k', linewidth = 0.25, s = 50)
 plt.xticks(fontsize = 24)
 plt.yticks([0.8, 0.9, 1.0], [80, 90, 100], fontsize = 24)
 """
@@ -190,14 +190,6 @@ plt.xticks([0,1, 2, 3,4,5], [0,1, 2, 3,4,5], fontsize = 26)
 plt.yticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
 plt.ylim(-0.15, 1.45)
 print('Specificity model novel IgG correlation: ' + str(sc.stats.spearmanr(igg_psy_transform.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA Binding'])))
-
-#%%
-print('Antigen model scFab correlation: ' + str(sc.stats.pearsonr(iso_ant_transform.iloc[:,0], iso_binding.iloc[:,1])))
-print('Specificity model scFab correlation: ' + str(sc.stats.pearsonr(iso_psy_transform.iloc[:,0], iso_binding.iloc[:,2])))
-print('Antigen model in-library IgG correlation: ' + str(sc.stats.pearsonr(igg_ant_transform.iloc[0:42,0], igg_binding.iloc[0:42,1])))
-print('Specificity model in-library IgG correlation: ' + str(sc.stats.pearsonr(igg_psy_transform.iloc[0:42,0], igg_binding.iloc[0:42,2])))
-print('Antigen model novel IgG correlation: ' + str(sc.stats.pearsonr(igg_ant_transform.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'ANT Binding'])))
-print('Specificity model novel IgG correlation: ' + str(sc.stats.pearsonr(igg_psy_transform.loc[igg_binding['Blosum62'] == 1,0], igg_binding.loc[igg_binding['Blosum62'] == 1,'OVA Binding'])))
 
 
 

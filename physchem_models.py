@@ -44,7 +44,7 @@ igg_psy_transform = pd.DataFrame(-1*lda_psy.transform(igg_physvh)).set_index(igg
 
 
 #%%
-"""
+
 # sample size elbow plot
 
 ant_test_acc = []
@@ -71,9 +71,9 @@ ant_predict_acc = []
 psy_predict_acc = []
 for j in np.arange(1,25):
     knc = KNC(n_neighbors = j)
-    cv_results = cv(knc, emi_data.iloc[:,3:8000], emi_data.iloc[:,0])
+    cv_results = cv(knc, emi_data.iloc[:,3:], emi_data.iloc[:,0])
     ant_predict_acc.append(np.mean(cv_results['test_score']))
-    cv_results = cv(knc, emi_data.iloc[:,3:8000], emi_data.iloc[:,1])
+    cv_results = cv(knc, emi_data.iloc[:,3:], emi_data.iloc[:,1])
     psy_predict_acc.append(np.mean(cv_results['test_score']))
     
 #%%
@@ -81,7 +81,7 @@ plt.scatter(np.arange(1,25), ant_predict_acc, c = 'blue', edgecolor = 'k', linew
 plt.scatter(np.arange(1,25), psy_predict_acc, c = 'red', edgecolor = 'k', linewidth = 0.25, s = 50)
 plt.xticks(fontsize = 24)
 plt.yticks([0.8, 0.9, 1.0], [80, 90, 100], fontsize = 24)
-"""
+
 #%%
 #model accuracy distributions
 plt.figure()

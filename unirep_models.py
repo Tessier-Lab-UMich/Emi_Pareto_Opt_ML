@@ -156,10 +156,10 @@ print('Specificity model in-library IgG correlation: ' + str(sc.stats.spearmanr(
 #experimental pareto
 plt.figure()
 plt.errorbar(igg_binding.iloc[0:41,1], igg_binding.iloc[0:41,2], xerr = igg_binding.iloc[0:41,3], yerr = igg_binding.iloc[0:41,4], linewidth = 0, elinewidth = 0.5, ecolor = 'k', capsize = 3, zorder = 1)
-plt.scatter(igg_binding.iloc[0:41,1], igg_binding.iloc[0:41,2], s = 150, c = 'blueviolet', edgecolor = 'k', linewidth = 0.5, zorder = 2)
+plt.scatter(igg_binding.iloc[0:41,1], igg_binding.iloc[0:41,2], s = 150, c = 'blueviolet', edgecolor = 'k', linewidth = 0.25, zorder = 2)
 #plt.scatter(igg_binding.loc[igg_binding['Scaffold'] == 1,'ANT Binding'], igg_binding.loc[igg_binding['Scaffold'] == 1,'OVA Binding'], s = 150, c = cmap(0.65), edgecolor = 'k', linewidth = 0.5, zorder = 3)
-plt.scatter(1,1, s = 200, c = 'k', edgecolor = 'k', linewidth = 0.5, zorder = 4)
-plt.scatter(1.2,0.51, s = 200, c = cmap(0.85), edgecolor = 'k', linewidth = 0.5, zorder = 4)
+plt.scatter(1,1, s = 200, c = 'k', edgecolor = 'k', linewidth = 0.25, zorder = 4)
+plt.scatter(1.2,0.51, s = 200, c = cmap(0.85), edgecolor = 'k', linewidth = 0.25, zorder = 4)
 plt.xticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)
 plt.xlim(-0.05, 1.45)
 plt.yticks([0.0, 0.4, 0.8, 1.2], [0.0, 0.4, 0.8, 1.2], fontsize = 26)

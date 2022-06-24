@@ -44,9 +44,8 @@ igg_psy_transform = pd.DataFrame(-1*lda_psy.transform(igg_physvh)).set_index(igg
 
 
 #%%
-
 # sample size elbow plot
-
+emi_data = pd.concat([emi_binding, emi_reps.set_index(emi_binding.index)], axis = 1)
 ant_test_acc = []
 psy_test_acc = []
 for i in np.arange(25,4000,25):
